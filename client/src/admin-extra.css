@@ -1,0 +1,178 @@
+.category-create {
+  display: flex;
+  gap: 10px;
+  background: #fff;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.category-create input,
+.admin-modal select {
+  border: 1px solid var(--line);
+  padding: 10px;
+  flex: 1;
+}
+
+.edit-link {
+  border: 0;
+  background: none;
+  color: var(--gold-dark);
+  font-size: 11px;
+  margin-left: 8px;
+}
+
+.mini-select,
+.language-toggle {
+  border: 1px solid rgba(185, 138, 59, .25);
+  background: #fff;
+  min-height: 36px;
+  padding: 0 10px;
+  color: var(--ink);
+}
+
+.language-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.language-toggle svg {
+  width: 15px;
+}
+
+.alshamel-hero {
+  background: #111;
+}
+
+.review-grid,
+.partner-grid,
+.payment-method-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.review-grid article,
+.partner-grid span,
+.payment-method-grid label {
+  border: 1px solid var(--line);
+  background: #fff;
+  padding: 22px;
+}
+
+.partner-grid span {
+  display: grid;
+  place-items: center;
+  min-height: 86px;
+  font-weight: 700;
+  color: var(--gold-dark);
+}
+
+.payment-method-grid label.active {
+  border-color: var(--gold);
+  background: #fbf6eb;
+}
+
+.proof-box,
+.coupon-row {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.coupon-row {
+  grid-template-columns: 1fr auto;
+}
+
+.coupon-row input,
+.coupon-row button,
+.proof-box input {
+  border: 1px solid var(--line);
+  padding: 11px;
+}
+
+.coupon-row button {
+  background: var(--ink);
+  color: #fff;
+}
+
+.upload-proof {
+  border: 1px dashed var(--gold);
+  padding: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.upload-proof input {
+  display: none;
+}
+
+.admin-form-grid {
+  background: #fff;
+  border: 1px solid #eeeae5;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.admin-form-grid input,
+.admin-form-grid textarea,
+.admin-form-grid select {
+  border: 1px solid var(--line);
+  padding: 10px;
+  width: 100%;
+}
+
+.admin-form-grid .wide {
+  grid-column: span 2;
+}
+
+.permission-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.permission-list span {
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 7px 10px;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .category-create {
+    flex-direction: column;
+  }
+
+  .review-grid,
+  .partner-grid,
+  .payment-method-grid,
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form-grid .wide {
+    grid-column: auto;
+  }
+
+  .mobile-drawer {
+    display: none;
+    right: 0;
+    transform: none;
+  }
+
+  .mobile-drawer.open {
+    display: block;
+    right: 0;
+  }
+
+  .seal {
+    left: 0;
+  }
+}
