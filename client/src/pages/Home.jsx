@@ -9,7 +9,7 @@ import { useCatalog } from "../hooks/useCatalog";
 const reviews = [
   { ar: "الأصناف مرتبة والطلب عبر واتساب كان سريع وواضح.", en: "Categories are clear and WhatsApp ordering was fast.", name: "عميلة من صنعاء" },
   { ar: "الهوية جميلة والمنتجات وصلت مثل الصور.", en: "Beautiful identity and products arrived as shown.", name: "عميلة من عدن" },
-  { ar: "أحببت تنوع المكياج والعطور والهدايا في مكان واحد.", en: "I loved finding makeup, perfumes, and gifts in one place.", name: "عميلة من إب" }
+  { ar: "أحببت تنوع مستحضرات التجميل والعطور والهدايا في مكان واحد.", en: "I loved finding makeup, perfumes, and gifts in one place.", name: "عميلة من إب" }
 ];
 
 export default function Home() {
@@ -56,7 +56,7 @@ export default function Home() {
       </div></section>
 
       <section className="section container">
-        <SectionTitle eyebrow={t("mainCategories")} title={language === "ar" ? "الأصناف كما في هوية المتجر" : "Categories From The Brand"} description={language === "ar" ? "أظافر، مستحضرات تجميل، عطور، حقائب، نظارات، إكسسوارات، عناية، هدايا." : "Nails, makeup, perfumes, bags, eyewear, accessories, care, and gifts."} />
+        <SectionTitle eyebrow={t("mainCategories")} title={language === "ar" ? "الأصناف كما في هوية المتجر" : "Categories From The Brand"} description={language === "ar" ? "أظافر اصطناعية، مستحضرات تجميل، عطور، حقائب، نظارات، إكسسوارات، منتجات عناية، هدايا." : "Nails, makeup, perfumes, bags, eyewear, accessories, care, and gifts."} />
         <div className="beauty-category-grid">
           {categories.slice(0, 8).map((category) => (
             <Link to={`/products?category=${category._id}`} className="beauty-category-card" key={category._id}>
