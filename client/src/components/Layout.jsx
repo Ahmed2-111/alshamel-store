@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Facebook, Globe2, Heart, Instagram, Mail, Menu, Phone, Search, ShoppingBag, User, X } from "lucide-react";
 import Logo from "./Logo";
 import { useStore } from "../context/StoreContext";
-import { countries, currencies } from "../i18n";
+import { brandContacts, countries, currencies } from "../i18n";
 
 export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,8 +29,8 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
-      <div className="announcement">{t("freeShipping")} <span>•</span> {t("giftWrap")}</div>
-      <header className="header">
+      <div className="announcement">{t("freeShipping")} <span>•</span> {brandContacts.instagram} <span>•</span> {brandContacts.whatsapp}</div>
+      <header className="header beauty-header">
         <div className="container header-inner">
           <button className="icon-button mobile-menu" onClick={() => setMenuOpen(true)} aria-label="menu"><Menu /></button>
           <Link to="/"><Logo /></Link>
@@ -71,14 +71,14 @@ export default function Layout() {
       )}
 
       <main><Outlet /></main>
-      <footer className="footer">
+      <footer className="footer beauty-footer">
         <div className="container footer-grid">
-          <div className="footer-brand"><Logo /><p>{language === "ar" ? "منصة تسوق شاملة لليمن ودول الخليج، تجمع المنتجات والعروض وطرق الدفع المحلية والدولية." : "A complete commerce platform for Yemen and GCC markets with products, offers, and local or international payments."}</p><div className="socials"><a href="#"><Instagram /></a><a href="#"><Facebook /></a></div></div>
+          <div className="footer-brand"><Logo /><p>{language === "ar" ? "متجر الشامل: كل ما تحتاجه المرأة في مكان واحد، من المكياج والعطور إلى الإكسسوارات والهدايا." : "Alshamel Store: everything women need in one place, from makeup and perfumes to accessories and gifts."}</p><div className="socials"><a href="#"><Instagram /></a><a href="#"><Facebook /></a></div></div>
           <div><h4>{t("shop")}</h4><Link to="/products">{t("allProducts")}</Link><Link to="/categories">{t("categories")}</Link><Link to="/products?sort=newest">{t("newProducts")}</Link><Link to="/products?featured=true">{t("suggested")}</Link></div>
-          <div><h4>{language === "ar" ? "خدمة العملاء" : "Customer Care"}</h4><Link to="/contact">{t("contact")}</Link><Link to="/about">{t("about")}</Link><a href="#">{language === "ar" ? "الشحن والاسترجاع" : "Shipping & Returns"}</a><a href="#">{language === "ar" ? "الأسئلة الشائعة" : "FAQ"}</a></div>
-          <div><h4>{language === "ar" ? "ابق قريبًا" : "Stay Connected"}</h4><p>{language === "ar" ? "اشترك ليصلك جديد العروض والمنتجات." : "Subscribe for the latest offers and products."}</p><form className="newsletter" onSubmit={(e) => e.preventDefault()}><input type="email" placeholder={language === "ar" ? "بريدك الإلكتروني" : "Email address"} /><button><Mail /></button></form><p className="contact-line"><Phone /> +967 777 000 111</p></div>
+          <div><h4>{language === "ar" ? "خدمة العملاء" : "Customer Care"}</h4><Link to="/contact">{t("contact")}</Link><Link to="/about">{t("about")}</Link><a href={`tel:${brandContacts.phone}`}>{brandContacts.phone}</a><a href="#">{brandContacts.instagram}</a></div>
+          <div><h4>{language === "ar" ? "ابق قريبًا" : "Stay Connected"}</h4><p>{language === "ar" ? "تابع جديد المنتجات والعروض عبر حساباتنا." : "Follow our latest products and offers."}</p><form className="newsletter" onSubmit={(e) => e.preventDefault()}><input type="email" placeholder={language === "ar" ? "بريدك الإلكتروني" : "Email address"} /><button><Mail /></button></form><p className="contact-line"><Phone /> {brandContacts.whatsapp}</p></div>
         </div>
-        <div className="footer-bottom container"><span>© 2026 {t("storeName")}. {language === "ar" ? "جميع الحقوق محفوظة." : "All rights reserved."}</span><span>{language === "ar" ? "جاهز للتجارة في اليمن والخليج" : "Ready for Yemen and GCC commerce"}</span></div>
+        <div className="footer-bottom container"><span>© 2026 {t("storeName")}. {language === "ar" ? "جميع الحقوق محفوظة." : "All rights reserved."}</span><span>{brandContacts.handle}</span></div>
       </footer>
       {toast && <div className={`toast ${toast.type}`}>{toast.message}</div>}
     </div>

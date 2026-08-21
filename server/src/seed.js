@@ -17,18 +17,23 @@ import StoreSetting from "./models/StoreSetting.js";
 import User from "./models/User.js";
 
 const categories = [
-  { name: "الإلكترونيات", translations: { en: { name: "Electronics" } }, slug: "electronics", sortOrder: 1, image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=85" },
-  { name: "الموضة", translations: { en: { name: "Fashion" } }, slug: "fashion", sortOrder: 2, image: "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=900&q=85" },
-  { name: "المنزل", translations: { en: { name: "Home" } }, slug: "home", sortOrder: 3, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=85" },
-  { name: "الجمال والعناية", translations: { en: { name: "Beauty" } }, slug: "beauty", sortOrder: 4, image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=85" }
+  { name: "أظافر اصطناعية", translations: { en: { name: "Artificial Nails" } }, slug: "artificial-nails", sortOrder: 1, image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=900&q=85" },
+  { name: "مستحضرات تجميل", translations: { en: { name: "Makeup" } }, slug: "makeup", sortOrder: 2, image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=85" },
+  { name: "عطور", translations: { en: { name: "Perfumes" } }, slug: "perfumes", sortOrder: 3, image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=85" },
+  { name: "حقائب", translations: { en: { name: "Bags" } }, slug: "bags", sortOrder: 4, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=85" },
+  { name: "نظارات", translations: { en: { name: "Eyewear" } }, slug: "eyewear", sortOrder: 5, image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=900&q=85" },
+  { name: "إكسسوارات", translations: { en: { name: "Accessories" } }, slug: "accessories", sortOrder: 6, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=85" },
+  { name: "منتجات عناية", translations: { en: { name: "Care Products" } }, slug: "care-products", sortOrder: 7, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=85" },
+  { name: "هدايا", translations: { en: { name: "Gifts" } }, slug: "gifts", sortOrder: 8, image: "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=900&q=85" }
 ];
 
 const products = [
-  { name: "ساعة ذكية برو", translations: { en: { name: "Smart Watch Pro", description: "Health tracking smartwatch with long battery life." } }, brand: "Al Shamel Tech", slug: "smart-watch-pro", price: 55, originalPrice: 55, salePrice: 39, discountPercent: 29, stock: 18, lowStockThreshold: 5, sku: "AS-EL-001", category: "electronics", featured: true, sold: 120, colors: ["black", "gold"], sizes: ["42mm", "46mm"], weight: 0.18, description: "ساعة ذكية بتتبع صحي وتنبيهات وبطارية تدوم طويلًا.", images: ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=90"] },
-  { name: "حقيبة سفر عملية", translations: { en: { name: "Travel Organizer Bag" } }, brand: "Shamel Travel", slug: "travel-organizer-bag", price: 30, salePrice: 22, discountPercent: 27, stock: 30, sku: "AS-FS-002", category: "fashion", featured: true, sold: 88, colors: ["black", "gray"], weight: 0.6, description: "حقيبة مقاومة للماء مع جيوب متعددة مناسبة للسفر والاستخدام اليومي.", images: ["https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=90"] },
-  { name: "مصباح LED منزلي", translations: { en: { name: "Home LED Lamp" } }, brand: "Home Plus", slug: "home-led-lamp", price: 16, stock: 42, sku: "AS-HM-003", category: "home", featured: true, sold: 72, colors: ["white", "black"], weight: 0.4, description: "مصباح LED بتصميم حديث يناسب المكاتب وغرف النوم.", images: ["https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1000&q=90"] },
-  { name: "مجموعة عناية يومية", translations: { en: { name: "Daily Care Set" } }, brand: "Care Line", slug: "daily-care-set", price: 35, salePrice: 28, discountPercent: 20, stock: 25, sku: "AS-BT-004", category: "beauty", featured: true, sold: 110, description: "مجموعة عناية متكاملة مناسبة للاستخدام اليومي.", images: ["https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1000&q=90"] },
-  { name: "سماعات بلوتوث", translations: { en: { name: "Bluetooth Earbuds" } }, brand: "Al Shamel Tech", slug: "bluetooth-earbuds", price: 18, stock: 5, lowStockThreshold: 6, sku: "AS-EL-005", category: "electronics", sold: 95, colors: ["white", "black"], description: "سماعات لاسلكية بميكروفون مدمج وعمر بطارية جيد.", images: ["https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?auto=format&fit=crop&w=1000&q=90"] }
+  { name: "باليت مكياج يومي", translations: { en: { name: "Daily Makeup Palette", description: "Soft shades for daily looks." } }, brand: "Alshamel Beauty", slug: "daily-makeup-palette", price: 9500, originalPrice: 9500, salePrice: 7800, discountPercent: 18, stock: 20, lowStockThreshold: 5, sku: "SH-MK-001", category: "makeup", featured: true, sold: 140, colors: ["beige", "pink", "brown"], description: "باليت مكياج بدرجات هادئة مناسبة للاستخدام اليومي والمناسبات الخفيفة.", images: ["https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1000&q=90"] },
+  { name: "عطر نسائي فاخر", translations: { en: { name: "Luxury Women's Perfume" } }, brand: "Alshamel Scents", slug: "luxury-women-perfume", price: 14500, stock: 14, sku: "SH-PR-002", category: "perfumes", featured: true, sold: 96, description: "عطر أنثوي ناعم بنفحات زهرية دافئة مناسب للهدايا والاستخدام اليومي.", images: ["https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=1000&q=90"] },
+  { name: "حقيبة أنيقة صغيرة", translations: { en: { name: "Elegant Mini Bag" } }, brand: "Alshamel Style", slug: "elegant-mini-bag", price: 15000, salePrice: 12000, discountPercent: 20, stock: 11, sku: "SH-BG-003", category: "bags", featured: true, sold: 76, colors: ["olive", "beige", "black"], description: "حقيبة صغيرة بتفاصيل ناعمة تناسب الإطلالات اليومية.", images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1000&q=90"] },
+  { name: "سيروم عناية بالبشرة", translations: { en: { name: "Skin Care Serum" } }, brand: "Care Lab", slug: "skin-care-serum", price: 6800, stock: 25, sku: "SH-CR-004", category: "care-products", featured: true, sold: 120, description: "سيروم خفيف للعناية اليومية يمنح البشرة ترطيبًا وملمسًا ناعمًا.", images: ["https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=1000&q=90"] },
+  { name: "طقم أظافر اصطناعية", translations: { en: { name: "Artificial Nails Set" } }, brand: "Nail Chic", slug: "artificial-nails-set", price: 3500, stock: 30, sku: "SH-NA-005", category: "artificial-nails", sold: 88, description: "طقم أظافر اصطناعية بتصميم أنيق للاستخدام المنزلي.", images: ["https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=1000&q=90"] },
+  { name: "إكسسوار ذهبي ناعم", translations: { en: { name: "Soft Gold Accessory" } }, brand: "Alshamel Accessories", slug: "soft-gold-accessory", price: 5200, stock: 18, sku: "SH-AC-006", category: "accessories", sold: 64, description: "إكسسوار ناعم بلون ذهبي يناسب الهدايا والإطلالات اليومية.", images: ["https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1000&q=90"] }
 ];
 
 async function seed() {
@@ -38,23 +43,22 @@ async function seed() {
   const categoryMap = Object.fromEntries(createdCategories.map((category) => [category.slug, category._id]));
   await Product.insertMany(products.map((product) => ({ ...product, category: categoryMap[product.category] })));
   await User.create([
-    { name: "مالك متجر الشامل", email: "owner@alshamel.store", password: "Admin123!", phone: "777000111", role: "super_admin", permissions: { products: true, categories: true, orders: true, customers: true, marketing: true, settings: true, staff: true, reports: true } },
-    { name: "مدير المتجر", email: "admin@alshamel.store", password: "Admin123!", phone: "777000222", role: "admin" },
+    { name: "مالك متجر الشامل", email: "owner@alshamel.store", password: "Admin123!", phone: "784798561", role: "super_admin", permissions: { products: true, categories: true, orders: true, customers: true, marketing: true, settings: true, staff: true, reports: true } },
+    { name: "مدير المتجر", email: "admin@alshamel.store", password: "Admin123!", phone: "779996367", role: "admin" },
     { name: "عميل تجريبي", email: "customer@example.com", password: "Customer123!", phone: "777123456", role: "customer" }
   ]);
   await PaymentMethod.insertMany([
     { key: "cod", name: "الدفع عند الاستلام", translations: { en: { name: "Cash On Delivery" } }, type: "cod", isActive: true, instructions: "ادفع نقدًا عند الاستلام." },
-    { key: "paypal", name: "PayPal", type: "paypal", isActive: true, instructions: "سيتم تحويلك لاحقًا إلى PayPal عند تفعيل الربط الحقيقي." },
-    { key: "jaib", name: "محفظة جيب", translations: { en: { name: "Jaib Wallet" } }, type: "wallet", accountName: "متجر الشامل", accountNumber: "777000111", instructions: "حوّل المبلغ وارفع صورة الإيصال." },
-    { key: "floosk", name: "محفظة فلوسك", translations: { en: { name: "Floosk Wallet" } }, type: "wallet", accountName: "متجر الشامل", accountNumber: "777000222", instructions: "حوّل المبلغ وارفع رقم العملية." },
-    { key: "kuraimi", name: "بنك الكريمي", translations: { en: { name: "Al Kuraimi Bank" } }, type: "bank", accountName: "Al Shamel Store", accountNumber: "123456789", instructions: "ارفع إثبات التحويل للمراجعة." }
+    { key: "jaib", name: "محفظة جيب", translations: { en: { name: "Jaib Wallet" } }, type: "wallet", accountName: "متجر الشامل", accountNumber: "784798561", instructions: "حوّل المبلغ وارفع صورة الإيصال." },
+    { key: "floosk", name: "محفظة فلوسك", translations: { en: { name: "Floosk Wallet" } }, type: "wallet", accountName: "متجر الشامل", accountNumber: "779996367", instructions: "حوّل المبلغ وارفع رقم العملية." },
+    { key: "kuraimi", name: "بنك الكريمي", translations: { en: { name: "Al Kuraimi Bank" } }, type: "bank", accountName: "Alshamel Store", accountNumber: "784798561", instructions: "ارفع إثبات التحويل للمراجعة." }
   ]);
-  await ShippingRate.insertMany(["YE", "SA", "AE", "QA", "KW", "BH", "OM"].map((country, index) => ({ country, city: "*", currency: country === "YE" ? "YER" : "USD", fee: [5, 9, 10, 10, 12, 12, 11][index], freeAbove: 150 })));
-  await Coupon.create({ code: "SHAMEL10", discountType: "percent", value: 10, usageLimit: 100, minOrderTotal: 30, isActive: true });
-  await Banner.create({ title: "عروض متجر الشامل", translations: { en: { title: "Al Shamel Offers" } }, subtitle: "خصومات وشحن مرن لليمن والخليج", image: "https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1200&q=90", placement: "hero", isActive: true });
+  await ShippingRate.insertMany(["YE", "SA", "AE", "QA", "KW", "BH", "OM"].map((country, index) => ({ country, city: "*", currency: country === "YE" ? "YER" : "USD", fee: [1500, 25, 25, 25, 30, 30, 28][index], freeAbove: 50000 })));
+  await Coupon.create({ code: "SHAMEL10", discountType: "percent", value: 10, usageLimit: 100, minOrderTotal: 10000, isActive: true });
+  await Banner.create({ title: "متجر الشامل", translations: { en: { title: "Alshamel Store" } }, subtitle: "كل ما تحتاجه المرأة في مكان واحد", image: "/brand/alshamel-banner.jpg", placement: "hero", isActive: true });
   await Offer.create({ name: "خصم افتتاحي", type: "general", discountType: "percent", value: 10, isActive: true });
-  await StoreSetting.create({ key: "default", storeName: "متجر الشامل", translations: { en: { storeName: "Al Shamel Store" } }, email: "hello@alshamel.store", phones: ["+967 777 000 111"], supportedCountries: ["YE", "SA", "AE", "QA", "KW", "BH", "OM"], supportedCurrencies: ["YER", "SAR", "AED", "QAR", "KWD", "BHD", "OMR", "USD"], privacyPolicy: "سياسة خصوصية قابلة للتعديل من لوحة التحكم.", terms: "الشروط والأحكام قابلة للتعديل من لوحة التحكم." });
-  console.log("Al Shamel seed data created successfully");
+  await StoreSetting.create({ key: "default", storeName: "متجر الشامل", logo: "/alshamel-logo.png", translations: { en: { storeName: "Alshamel Store" } }, email: "hello@alshamel.store", phones: ["+967 784798561", "+967 779996367"], socials: { instagram: "@story_yemen", whatsapp: "+967779996367" }, supportedCountries: ["YE", "SA", "AE", "QA", "KW", "BH", "OM"], supportedCurrencies: ["YER", "SAR", "AED", "QAR", "KWD", "BHD", "OMR", "USD"], privacyPolicy: "سياسة خصوصية قابلة للتعديل من لوحة التحكم.", terms: "الشروط والأحكام قابلة للتعديل من لوحة التحكم." });
+  console.log("Alshamel Store seed data created successfully");
   await mongoose.connection.close();
 }
 

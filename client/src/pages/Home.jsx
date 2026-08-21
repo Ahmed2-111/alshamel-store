@@ -1,15 +1,15 @@
-import { ArrowLeft, BadgePercent, CreditCard, Headphones, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeft, Gift, Instagram, MessageCircle, Phone, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import SectionTitle from "../components/SectionTitle";
 import { useStore } from "../context/StoreContext";
+import { brandContacts } from "../i18n";
 import { useCatalog } from "../hooks/useCatalog";
 
-const partners = ["PayPal", "جيب", "فلوسك", "الكريمي", "DHL", "Aramex"];
 const reviews = [
-  { ar: "تجربة مرتبة وسريعة، خيارات الدفع المحلية ممتازة.", en: "Smooth experience and great local payment options.", name: "Sara A." },
-  { ar: "المنتجات وصلت بتغليف ممتاز والتتبع واضح.", en: "Products arrived well packed and tracking was clear.", name: "Mohammed S." },
-  { ar: "لوحة دفع سهلة ودعم ممتاز عبر واتساب.", en: "Easy checkout and excellent WhatsApp support.", name: "Huda M." }
+  { ar: "الأصناف مرتبة والطلب عبر واتساب كان سريع وواضح.", en: "Categories are clear and WhatsApp ordering was fast.", name: "عميلة من صنعاء" },
+  { ar: "الهوية جميلة والمنتجات وصلت مثل الصور.", en: "Beautiful identity and products arrived as shown.", name: "عميلة من عدن" },
+  { ar: "أحببت تنوع المكياج والعطور والهدايا في مكان واحد.", en: "I loved finding makeup, perfumes, and gifts in one place.", name: "عميلة من إب" }
 ];
 
 export default function Home() {
@@ -22,11 +22,11 @@ export default function Home() {
 
   return (
     <>
-      <section className="hero alshamel-hero">
+      <section className="hero alshamel-beauty-hero">
         <div className="hero-pattern" />
         <div className="container hero-content">
           <div className="hero-copy">
-            <span className="eyebrow light">{t("heroEyebrow")}</span>
+            <span className="eyebrow light">{brandContacts.handle}</span>
             <h1>{t("heroTitleA")}<br /><em>{t("heroTitleB")}</em></h1>
             <p>{t("heroText")}</p>
             <div className="hero-actions">
@@ -34,49 +34,65 @@ export default function Home() {
               <Link to="/contact" className="text-link light">{t("contact")}</Link>
             </div>
           </div>
-          <div className="hero-visual">
-            <div className="hero-main-image"><img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=1200&q=90" alt={t("storeName")} /></div>
-            <div className="hero-float"><BadgePercent /><span>{language === "ar" ? "عروض قابلة للإدارة" : "Managed deals"}<br /><b>{language === "ar" ? "من لوحة التحكم" : "from dashboard"}</b></span></div>
+          <div className="hero-visual beauty-visual">
+            <div className="hero-main-image beauty-main-image"><img src="/brand/store-interior.jpg" alt={t("storeName")} /></div>
+            <div className="hero-float beauty-float"><Sparkles /><span>{language === "ar" ? "هوية متجر حقيقية" : "Real store identity"}<br /><b>{brandContacts.instagram}</b></span></div>
             <div className="hero-arch" />
           </div>
         </div>
       </section>
 
-      <section className="benefits"><div className="container benefits-grid">
-        <div><Truck /><span><b>{language === "ar" ? "شحن ذكي" : "Smart Shipping"}</b><small>{language === "ar" ? "حسب الدولة والمدينة" : "By country and city"}</small></span></div>
-        <div><CreditCard /><span><b>{language === "ar" ? "دفع متعدد" : "Multiple Payments"}</b><small>COD, PayPal, Wallets</small></span></div>
-        <div><ShieldCheck /><span><b>{language === "ar" ? "تجربة آمنة" : "Secure Store"}</b><small>JWT + Roles</small></span></div>
-        <div><Headphones /><span><b>{language === "ar" ? "دعم العملاء" : "Customer Support"}</b><small>WhatsApp & Email</small></span></div>
+      <section className="brand-strip-section">
+        <div className="container">
+          <img src="/brand/alshamel-banner.jpg" alt="هوية متجر الشامل والأصناف" />
+        </div>
+      </section>
+
+      <section className="benefits beauty-benefits"><div className="container benefits-grid">
+        <div><Gift /><span><b>{language === "ar" ? "هدايا" : "Gifts"}</b><small>{language === "ar" ? "تغليف واختيارات مناسبة" : "Curated gift picks"}</small></span></div>
+        <div><Truck /><span><b>{language === "ar" ? "طلب مباشر" : "Direct Ordering"}</b><small>{brandContacts.whatsapp}</small></span></div>
+        <div><ShieldCheck /><span><b>{language === "ar" ? "منتجات مختارة" : "Curated Products"}</b><small>{language === "ar" ? "جمال وعناية وإكسسوارات" : "Beauty, care, accessories"}</small></span></div>
+        <div><Instagram /><span><b>Instagram</b><small>{brandContacts.instagram}</small></span></div>
       </div></section>
 
       <section className="section container">
-        <SectionTitle eyebrow={t("mainCategories")} title={language === "ar" ? "تسوّق حسب القسم" : "Shop by Category"} description={language === "ar" ? "تصنيفات رئيسية وفرعية قابلة للترتيب من لوحة التحكم" : "Main and sub categories managed from the dashboard"} />
-        <div className="category-grid">
-          {categories.slice(0, 4).map((category, index) => (
-            <Link to={`/products?category=${category._id}`} className={`category-card category-${index + 1}`} key={category._id}>
+        <SectionTitle eyebrow={t("mainCategories")} title={language === "ar" ? "الأصناف كما في هوية المتجر" : "Categories From The Brand"} description={language === "ar" ? "أظافر، مستحضرات تجميل، عطور، حقائب، نظارات، إكسسوارات، عناية، هدايا." : "Nails, makeup, perfumes, bags, eyewear, accessories, care, and gifts."} />
+        <div className="beauty-category-grid">
+          {categories.slice(0, 8).map((category) => (
+            <Link to={`/products?category=${category._id}`} className="beauty-category-card" key={category._id}>
               <img src={category.image} alt={category.name} />
-              <div><span>{category.productCount || 0} {language === "ar" ? "منتج" : "items"}</span><h3>{category.translations?.[language]?.name || category.name}</h3><small>{t("discover")} <ArrowLeft /></small></div>
+              <span>{category.translations?.[language]?.name || category.name}</span>
             </Link>
           ))}
         </div>
       </section>
 
-      <ProductSection eyebrow={t("newProducts")} title={language === "ar" ? "أحدث المنتجات" : "Fresh Arrivals"} products={newest} />
-      <ProductSection eyebrow={t("bestSellers")} title={language === "ar" ? "الأكثر طلبًا" : "Top Selling"} products={bestSellers} soft />
-      <ProductSection eyebrow={t("deals")} title={language === "ar" ? "خصومات نشطة" : "Active Discounts"} products={deals.length ? deals : products.slice(0, 4)} />
-      <ProductSection eyebrow={t("suggested")} title={language === "ar" ? "اختيارات مقترحة" : "Recommended For You"} products={suggested.length ? suggested : products.slice(0, 4)} soft />
+      <ProductSection eyebrow={t("newProducts")} title={language === "ar" ? "وصل حديثًا للمتجر" : "Fresh In Store"} products={newest} />
+      <ProductSection eyebrow={t("bestSellers")} title={language === "ar" ? "الأكثر طلبًا" : "Best Sellers"} products={bestSellers} soft />
+      <ProductSection eyebrow={t("deals")} title={language === "ar" ? "عروض وخصومات" : "Offers & Discounts"} products={deals.length ? deals : products.slice(0, 4)} />
+      <ProductSection eyebrow={t("suggested")} title={language === "ar" ? "اختيارات متجر الشامل" : "Alshamel Picks"} products={suggested.length ? suggested : products.slice(0, 4)} soft />
 
-      <section className="story-banner container">
-        <div className="story-image"><img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1200&q=90" alt={t("storeName")} /><span className="seal">AS<small>{language === "ar" ? "الشامل" : "Store"}</small></span></div>
-        <div className="story-copy"><span className="eyebrow">{t("testimonials")}</span><h2>{language === "ar" ? "تجارة إلكترونية جاهزة للسوق" : "Commerce Ready For Launch"}</h2><p>{language === "ar" ? "واجهة عملاء احترافية، لوحة إدارة متكاملة، كوبونات، عروض، شحن، دفع محلي ودولي، وسجل نشاط للفريق." : "Professional storefront, complete admin, coupons, offers, shipping, local and international payments, and staff activity logs."}</p><Link to="/products" className="button outline">{t("discover")} <ArrowLeft /></Link></div>
+      <section className="story-banner container beauty-contact-banner">
+        <div className="story-image qr-panel">
+          <img src="/brand/alshamel-qr.jpg" alt="QR متجر الشامل" />
+          <span className="seal">SH<small>QR</small></span>
+        </div>
+        <div className="story-copy">
+          <span className="eyebrow">{t("partners")}</span>
+          <h2>{language === "ar" ? "للتواصل والطلب المباشر" : "Contact And Direct Orders"}</h2>
+          <p>{language === "ar" ? "استخدم أرقام التواصل أو امسح رمز QR للوصول إلى حسابات متجر الشامل ومتابعة آخر المنتجات والعروض." : "Use the contact numbers or scan the QR code to reach Alshamel Store and follow the latest products and offers."}</p>
+          <div className="contact-pill-list">
+            <a href={`tel:${brandContacts.phone}`}><Phone /> {brandContacts.phone}</a>
+            <a href={`https://wa.me/${brandContacts.whatsapp.replace(/[^0-9]/g, "")}`}><MessageCircle /> {brandContacts.whatsapp}</a>
+            <a href="#"><Instagram /> {brandContacts.instagram}</a>
+          </div>
+        </div>
       </section>
 
       <section className="section container">
-        <SectionTitle eyebrow={t("testimonials")} title={language === "ar" ? "ماذا يقول العملاء؟" : "What Customers Say"} />
+        <SectionTitle eyebrow={t("testimonials")} title={language === "ar" ? "ثقة العملاء تبدأ من التفاصيل" : "Trust Begins With Details"} />
         <div className="review-grid">{reviews.map((review) => <article key={review.name}><p>{review[language]}</p><b>{review.name}</b></article>)}</div>
       </section>
-
-      <section className="instagram-section container"><span className="eyebrow">{t("partners")}</span><h2>{language === "ar" ? "شركاء وطرق دفع" : "Partners & Payment Methods"}</h2><div className="partner-grid">{partners.map((item) => <span key={item}>{item}</span>)}</div></section>
     </>
   );
 }

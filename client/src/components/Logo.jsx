@@ -5,7 +5,7 @@ export default function Logo({ compact = false }) {
       {!compact && (
         <span>
           <b>متجر الشامل</b>
-          <small>كل ما تحتاجه في مكان واحد</small>
+          <small>كل ما تحتاجه المرأة في مكان واحد</small>
         </span>
       )}
     </div>
