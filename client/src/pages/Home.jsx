@@ -58,7 +58,7 @@ export default function Home() {
       <section className="section container">
         <SectionTitle eyebrow={t("mainCategories")} title={language === "ar" ? "الأصناف كما في هوية المتجر" : "Categories From The Brand"} description={language === "ar" ? "أظافر اصطناعية، مستحضرات تجميل، عطور، حقائب، نظارات، إكسسوارات، منتجات عناية، هدايا." : "Nails, makeup, perfumes, bags, eyewear, accessories, care, and gifts."} />
         <div className="beauty-category-grid">
-          {categories.slice(0, 8).map((category) => (
+          {categories.map((category) => (
             <Link to={`/products?category=${category._id}`} className="beauty-category-card" key={category._id}>
               <img src={category.image} alt={category.name} />
               <span>{category.translations?.[language]?.name || category.name}</span>

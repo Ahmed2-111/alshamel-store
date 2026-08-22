@@ -27,8 +27,8 @@ export default function Contact() {
           <div><Phone /><span><small>للتواصل معنا</small><b>{brandContacts.phone}</b></span></div>
           <div><Phone /><span><small>واتساب</small><b>{brandContacts.whatsapp}</b></span></div>
           <div><Instagram /><span><small>إنستغرام</small><b>{brandContacts.instagram}</b></span></div>
-          <div><MapPin /><span><small>العنوان</small><b>صنعاء، الجمهورية اليمنية</b></span></div>
-          <div><Clock3 /><span><small>ساعات العمل</small><b>السبت - الخميس، 9 ص - 6 م</b></span></div>
+          <div><MapPin /><span><small>العنوان</small><b>صنعاء، الزهراوي، تحت جامع بدر</b></span></div>
+          <div><Clock3 /><span><small>ساعات العمل</small><b>24 ساعة، طوال أيام الأسبوع</b></span></div>
         </div>
         <form className="contact-form" onSubmit={submit}>
           <h2>{sent ? "شكرًا لرسالتك" : "أرسل لنا رسالة"}</h2>

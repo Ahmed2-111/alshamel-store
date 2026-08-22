@@ -11,7 +11,7 @@ export default function Layout() {
   const [term, setTerm] = useState("");
   const { cartCount, favorites, user, toast, language, setLanguage, t, country, setCountry, currency, setCurrency } = useStore();
   const navigate = useNavigate();
-  const isStaff = ["employee", "admin", "super_admin"].includes(user?.role);
+  const isStaff = ["admin", "super_admin"].includes(user?.role);
 
   const search = (event) => {
     event.preventDefault();

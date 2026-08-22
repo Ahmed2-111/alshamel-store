@@ -8,6 +8,14 @@ import { logActivity } from "../middleware/activity.js";
 
 const router = Router();
 
+function slugify(value = "") {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 router.get(
   "/",
   asyncHandler(async (req, res) => {
@@ -70,12 +78,15 @@ router.post(
     const uploaded = req.files?.map((file) => `/uploads/${file.filename}`) || [];
     const bodyImages = Array.isArray(req.body.images) ? req.body.images : typeof req.body.images === "string" ? req.body.images.split(",").map((x) => x.trim()).filter(Boolean) : [];
     const images = uploaded.length ? uploaded.filter((file) => !file.match(/\.(mp4|mov|webm|avi)$/i)) : bodyImages;
+    const finalImages = images.length ? images : ["/brand/store-interior.jpg"];
     const video = uploaded.find((file) => file.match(/\.(mp4|mov|webm|avi)$/i)) || req.body.video;
+    const slug = req.body.slug || slugify(req.body.name);
     const product = await Product.create({
       ...req.body,
+      slug,
       colors: typeof req.body.colors === "string" ? req.body.colors.split(",").map((x) => x.trim()) : req.body.colors,
       sizes: typeof req.body.sizes === "string" ? req.body.sizes.split(",").map((x) => x.trim()) : req.body.sizes,
-      images,
+      images: finalImages,
       video
     });
     await logActivity(req, "create_product", "product", product._id, `created ${product.name}`);
