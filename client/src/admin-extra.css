@@ -293,6 +293,55 @@
   grid-column: span 2;
 }
 
+.product-editor {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.row-actions button,
+.button.ghost {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  padding: 8px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.row-actions svg,
+.button.ghost svg {
+  width: 14px;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 10px;
+}
+
+.check-row input {
+  width: auto;
+}
+
+.spin {
+  animation: admin-spin .8s linear infinite;
+}
+
+@keyframes admin-spin {
+  to { transform: rotate(360deg); }
+}
+
 .permission-list {
   display: flex;
   flex-wrap: wrap;
