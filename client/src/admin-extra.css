@@ -338,6 +338,32 @@
   animation: admin-spin .8s linear infinite;
 }
 
+.admin-sidebar nav {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 12px;
+}
+
+.admin-logout {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  background: rgba(217, 184, 74, .12) !important;
+  color: #fff !important;
+}
+
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-header-logout {
+  min-height: 40px;
+}
+
 @keyframes admin-spin {
   to { transform: rotate(360deg); }
 }
