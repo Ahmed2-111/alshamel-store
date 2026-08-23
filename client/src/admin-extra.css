@@ -364,6 +364,21 @@
   min-height: 40px;
 }
 
+.admin-alert {
+  margin: -18px 0 24px;
+  padding: 14px 18px;
+  border: 1px solid #cfe7d6;
+  background: #eefaf1;
+  color: #2d6b3f;
+  font-weight: 700;
+}
+
+.admin-alert.error {
+  border-color: #efc7c7;
+  background: #fff1f1;
+  color: #9f3434;
+}
+
 @keyframes admin-spin {
   to { transform: rotate(360deg); }
 }

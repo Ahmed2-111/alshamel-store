@@ -85,6 +85,13 @@ export default function Admin() {
   const [editingGenericId, setEditingGenericId] = useState(null);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [adminNotice, setAdminNotice] = useState(null);
+
+  const adminNotify = (message, type = "success") => {
+    setAdminNotice({ message, type });
+    notify(message, type);
+    window.setTimeout(() => setAdminNotice(null), 4500);
+  };
 
   const sectionTitles = { dashboard: t("dashboard"), products: t("products"), categories: t("categories"), orders: t("orders"), customers: t("customers"), banners: t("banners"), offers: t("offers"), coupons: t("coupons"), shipping: t("shipping"), payments: t("payments"), settings: t("settings"), staff: t("staff"), activity: t("activity") };
   const menu = [
@@ -102,7 +109,7 @@ export default function Admin() {
       setStats(dashboard.data);
       setData({ products: products.data, categories: categories.data, orders: orders.data, users: users.data, banners: banners.data, offers: offers.data, coupons: coupons.data, shipping: shipping.data, payments: payments.data, settings: settings.data, activity: activity.data });
     } catch (error) {
-      notify(error.message, "error");
+      adminNotify(error.message, "error");
     } finally {
       setLoading(false);
     }
@@ -127,10 +134,10 @@ export default function Admin() {
       } else {
         editingProductId ? await api.put(`/products/${editingProductId}`, productPayload(productForm)) : await api.post("/products", productPayload(productForm));
       }
-      notify(editingProductId ? "تم تعديل المنتج" : "تم حفظ المنتج");
+      adminNotify(editingProductId ? "تم تعديل المنتج وظهر في قائمة المنتجات" : "تم حفظ المنتج وظهر في قائمة المنتجات");
       resetProduct();
       load();
-    } catch (error) { notify(error.message, "error"); }
+    } catch (error) { adminNotify(error.message, "error"); }
   };
 
   const deleteProduct = async (id) => {
@@ -140,22 +147,23 @@ export default function Admin() {
     load();
   };
 
-  const updateOrder = async (id, status) => { await api.patch(`/orders/${id}/status`, { status }); load(); };
-  const updatePayment = async (id, paymentStatus) => { await api.patch(`/orders/${id}/payment`, { paymentStatus }); load(); };
+  const updateOrder = async (id, status) => { try { await api.patch(`/orders/${id}/status`, { status }); adminNotify("تم تحديث حالة الطلب"); load(); } catch (error) { notify(error.message, "error"); } };
+  const updatePayment = async (id, paymentStatus) => { try { await api.patch(`/orders/${id}/payment`, { paymentStatus }); adminNotify("تم تحديث حالة الدفع"); load(); } catch (error) { notify(error.message, "error"); } };
   const visibleProducts = data.products.filter((p) => [p.name, p.sku, p.brand, p.category?.name].join(" ").toLowerCase().includes(query.toLowerCase()));
 
   return <div className="admin-shell" dir={language === "ar" ? "rtl" : "ltr"}>
     <aside className="admin-sidebar"><Logo /><nav>{menu.map(([key, Icon]) => <button className={section === key ? "active" : ""} key={key} onClick={() => { setSection(key); setQuery(""); setEditingGenericId(null); setGeneric({}); }}><Icon /> {sectionTitles[key]}</button>)}</nav><button className="admin-logout" onClick={logout}><LogOut /> خروج</button></aside>
     <main className="admin-main">
       <header><div><small>مرحبًا</small><h2>{user.name}</h2></div><div className="admin-search"><Search /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="بحث..." /></div><div className="admin-header-actions"><button className="icon-button" onClick={load} title="تحديث"><RefreshCw className={loading ? "spin" : ""} /></button><button className="button ghost admin-header-logout" onClick={logout}><LogOut /> خروج</button></div></header>
+      {adminNotice && <div className={`admin-alert ${adminNotice.type}`}>{adminNotice.message}</div>}
       {section === "dashboard" && <Dashboard stats={stats} chartData={chartData} data={data} />}
       {section === "products" && <ProductsPanel products={visibleProducts} categories={data.categories} form={productForm} setForm={setProductForm} files={files} setFiles={setFiles} editingId={editingProductId} onSave={saveProduct} onCancel={resetProduct} onEdit={(p) => { setProductForm(toProductForm(p)); setEditingProductId(p._id); window.scrollTo({ top: 0, behavior: "smooth" }); }} onDelete={deleteProduct} />}
-      {section === "categories" && <GenericManager config={genericConfigs.categories} title={sectionTitles.categories} items={data.categories} generic={generic} setGeneric={setGeneric} editingId={editingGenericId} setEditingId={setEditingGenericId} reload={load} notify={notify} />}
+      {section === "categories" && <GenericManager config={genericConfigs.categories} title={sectionTitles.categories} items={data.categories} generic={generic} setGeneric={setGeneric} editingId={editingGenericId} setEditingId={setEditingGenericId} reload={load} notify={adminNotify} />}
       {section === "orders" && <Orders orders={data.orders} updateOrder={updateOrder} updatePayment={updatePayment} />}
       {section === "customers" && <UsersTable users={data.users.filter((x) => x.role === "customer")} reload={load} />}
-      {section === "staff" && <Staff users={data.users.filter((x) => x.role !== "customer")} reload={load} notify={notify} />}
-      {["banners", "offers", "coupons", "shipping", "payments"].includes(section) && <GenericManager config={genericConfigs[section]} title={sectionTitles[section]} items={data[section]} generic={generic} setGeneric={setGeneric} editingId={editingGenericId} setEditingId={setEditingGenericId} reload={load} notify={notify} />}
-      {section === "settings" && <SettingsPanel settings={data.settings} reload={load} notify={notify} />}
+      {section === "staff" && <Staff users={data.users.filter((x) => x.role !== "customer")} reload={load} notify={adminNotify} />}
+      {["banners", "offers", "coupons", "shipping", "payments"].includes(section) && <GenericManager config={genericConfigs[section]} title={sectionTitles[section]} items={data[section]} generic={generic} setGeneric={setGeneric} editingId={editingGenericId} setEditingId={setEditingGenericId} reload={load} notify={adminNotify} />}
+      {section === "settings" && <SettingsPanel settings={data.settings} reload={load} notify={adminNotify} />}
       {section === "activity" && <ActivityTable items={data.activity} />}
     </main>
   </div>;
