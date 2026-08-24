@@ -16,6 +16,11 @@ function slugify(value = "") {
     .replace(/^-+|-+$/g, "");
 }
 
+function uploadedFileUrl(req, filename) {
+  const baseUrl = process.env.PUBLIC_API_URL || `${req.protocol}://${req.get("host")}`;
+  return `${baseUrl.replace(/\/$/, "")}/uploads/${filename}`;
+}
+
 router.get(
   "/",
   asyncHandler(async (req, res) => {
@@ -75,7 +80,7 @@ router.post(
   adminOnly,
   upload.array("images", 6),
   asyncHandler(async (req, res) => {
-    const uploaded = req.files?.map((file) => `/uploads/${file.filename}`) || [];
+    const uploaded = req.files?.map((file) => uploadedFileUrl(req, file.filename)) || [];
     const bodyImages = Array.isArray(req.body.images) ? req.body.images : typeof req.body.images === "string" ? req.body.images.split(",").map((x) => x.trim()).filter(Boolean) : [];
     const images = uploaded.length ? uploaded.filter((file) => !file.match(/\.(mp4|mov|webm|avi)$/i)) : bodyImages;
     const finalImages = images.length ? images : ["/brand/store-interior.jpg"];
@@ -107,7 +112,7 @@ router.put(
     }
     const data = { ...req.body };
     if (req.files?.length) {
-      const uploaded = req.files.map((file) => `/uploads/${file.filename}`);
+      const uploaded = req.files.map((file) => uploadedFileUrl(req, file.filename));
       const video = uploaded.find((file) => file.match(/\.(mp4|mov|webm|avi)$/i));
       data.images = uploaded.filter((file) => !file.match(/\.(mp4|mov|webm|avi)$/i));
       if (video) data.video = video;
