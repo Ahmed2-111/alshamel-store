@@ -5,12 +5,12 @@ const api = axios.create({
 });
 
 const apiOrigin = api.defaults.baseURL.replace(/\/api\/?$/, "");
-const uploadPath = /^\/uploads\//;
+const uploadPath = /^\/?uploads[\\/]/;
 
 function normalizeMediaUrl(value) {
   if (!value || typeof value !== "string") return value;
   if (/^(https?:)?\/\//.test(value) || value.startsWith("data:") || value.startsWith("blob:")) return value;
-  if (uploadPath.test(value)) return `${apiOrigin}${value}`;
+  if (uploadPath.test(value)) return `${apiOrigin}/${value.replace(/^[\\/]+/, "").replace(/\\/g, "/")}`;
   return value;
 }
 

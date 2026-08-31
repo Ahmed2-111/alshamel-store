@@ -8,11 +8,16 @@ export default function ProductCard({ product }) {
   const finalPrice = product.salePrice || product.price;
   const original = product.originalPrice || product.compareAtPrice;
   const sale = product.discountPercent || (original ? Math.round((1 - finalPrice / original) * 100) : 0);
+  const image = product.images?.find(Boolean) || "/brand/store-interior.jpg";
+  const useFallbackImage = (event) => {
+    event.currentTarget.onerror = null;
+    event.currentTarget.src = "/brand/store-interior.jpg";
+  };
 
   return (
     <article className="product-card">
       <div className="product-image">
-        <Link to={`/products/${product.slug || product._id}`}><img src={product.images?.[0]} alt={displayName} /></Link>
+        <Link to={`/products/${product.slug || product._id}`}><img src={image} alt={displayName} onError={useFallbackImage} /></Link>
         <div className="product-tags">
           {sale > 0 && <span className="tag sale">-{sale}%</span>}
           {!product.stock && <span className="tag sold">{language === "ar" ? "نفد" : "Sold out"}</span>}

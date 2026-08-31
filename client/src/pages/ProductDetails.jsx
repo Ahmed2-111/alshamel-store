@@ -14,19 +14,24 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const useFallbackImage = (event) => {
+    event.currentTarget.onerror = null;
+    event.currentTarget.src = "/brand/store-interior.jpg";
+  };
 
   useEffect(() => {
     api.get(`/products/${id}`).then(({ data }) => setProduct(data.product)).catch(() => setProduct(fallbackProducts.find((x) => x.slug === id || x._id === id)));
   }, [id]);
 
   if (!product) return <div className="page loading">نجهز تفاصيل القطعة...</div>;
+  const images = product.images?.length ? product.images : ["/brand/store-interior.jpg"];
   return (
     <div className="page container">
       <div className="breadcrumbs"><Link to="/">الرئيسية</Link><ChevronLeft /><Link to="/products">المتجر</Link><ChevronLeft /><span>{product.name}</span></div>
       <section className="product-detail">
         <div className="gallery">
-          <div className="thumbs">{product.images.map((image, index) => <button className={activeImage === index ? "active" : ""} key={image} onClick={() => setActiveImage(index)}><img src={image} alt="" /></button>)}</div>
-          <div className="main-photo"><img src={product.images[activeImage]} alt={product.name} /></div>
+          <div className="thumbs">{images.map((image, index) => <button className={activeImage === index ? "active" : ""} key={image} onClick={() => setActiveImage(index)}><img src={image} alt="" onError={useFallbackImage} /></button>)}</div>
+          <div className="main-photo"><img src={images[activeImage] || images[0]} alt={product.name} onError={useFallbackImage} /></div>
         </div>
         <div className="detail-copy">
           <span className="eyebrow">{product.category?.name}</span>
