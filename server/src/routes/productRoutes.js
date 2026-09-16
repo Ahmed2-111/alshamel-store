@@ -21,6 +21,24 @@ function uploadedFileUrl(req, filename) {
   return `${baseUrl.replace(/\/$/, "")}/uploads/${filename}`;
 }
 
+function cleanOptionalFields(data) {
+  ["sku", "brand", "video", "slug"].forEach((key) => {
+    if (typeof data[key] === "string" && !data[key].trim()) delete data[key];
+  });
+  return data;
+}
+
+async function uniqueSlug(value, ignoredProductId) {
+  const base = slugify(value) || `product-${Date.now()}`;
+  let candidate = base;
+  let index = 2;
+  while (await Product.exists({ slug: candidate, ...(ignoredProductId ? { _id: { $ne: ignoredProductId } } : {}) })) {
+    candidate = `${base}-${index}`;
+    index += 1;
+  }
+  return candidate;
+}
+
 router.get(
   "/",
   asyncHandler(async (req, res) => {
@@ -80,17 +98,18 @@ router.post(
   adminOnly,
   upload.array("images", 6),
   asyncHandler(async (req, res) => {
+    const body = cleanOptionalFields({ ...req.body });
     const uploaded = req.files?.map((file) => uploadedFileUrl(req, file.filename)) || [];
-    const bodyImages = Array.isArray(req.body.images) ? req.body.images : typeof req.body.images === "string" ? req.body.images.split(",").map((x) => x.trim()).filter(Boolean) : [];
+    const bodyImages = Array.isArray(body.images) ? body.images : typeof body.images === "string" ? body.images.split(",").map((x) => x.trim()).filter(Boolean) : [];
     const images = uploaded.length ? uploaded.filter((file) => !file.match(/\.(mp4|mov|webm|avi)$/i)) : bodyImages;
     const finalImages = images.length ? images : ["/brand/store-interior.jpg"];
-    const video = uploaded.find((file) => file.match(/\.(mp4|mov|webm|avi)$/i)) || req.body.video;
-    const slug = req.body.slug || slugify(req.body.name);
+    const video = uploaded.find((file) => file.match(/\.(mp4|mov|webm|avi)$/i)) || body.video;
+    const slug = await uniqueSlug(body.slug || body.name);
     const product = await Product.create({
-      ...req.body,
+      ...body,
       slug,
-      colors: typeof req.body.colors === "string" ? req.body.colors.split(",").map((x) => x.trim()) : req.body.colors,
-      sizes: typeof req.body.sizes === "string" ? req.body.sizes.split(",").map((x) => x.trim()) : req.body.sizes,
+      colors: typeof body.colors === "string" ? body.colors.split(",").map((x) => x.trim()).filter(Boolean) : body.colors,
+      sizes: typeof body.sizes === "string" ? body.sizes.split(",").map((x) => x.trim()).filter(Boolean) : body.sizes,
       images: finalImages,
       video
     });
@@ -110,7 +129,7 @@ router.put(
       res.status(404);
       throw new Error("المنتج غير موجود");
     }
-    const data = { ...req.body };
+    const data = cleanOptionalFields({ ...req.body });
     if (req.files?.length) {
       const uploaded = req.files.map((file) => uploadedFileUrl(req, file.filename));
       const video = uploaded.find((file) => file.match(/\.(mp4|mov|webm|avi)$/i));
@@ -119,6 +138,7 @@ router.put(
     }
     if (typeof data.colors === "string") data.colors = data.colors.split(",").map((x) => x.trim());
     if (typeof data.sizes === "string") data.sizes = data.sizes.split(",").map((x) => x.trim());
+    if (data.slug) data.slug = await uniqueSlug(data.slug, product._id);
     Object.assign(product, data);
     await product.save();
     await logActivity(req, "update_product", "product", product._id, `updated ${product.name}`);

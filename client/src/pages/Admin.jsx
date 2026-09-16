@@ -68,8 +68,10 @@ function productPayload(form) {
     if (value === undefined) delete payload[key];
     else payload[key] = value;
   });
-  if (!payload.slug) delete payload.slug;
-  if (!payload.video) delete payload.video;
+  ["slug", "sku", "brand", "video"].forEach((key) => {
+    if (typeof payload[key] === "string") payload[key] = payload[key].trim();
+    if (!payload[key]) delete payload[key];
+  });
   return payload;
 }
 

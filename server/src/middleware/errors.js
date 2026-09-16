@@ -5,9 +5,10 @@ export function notFound(req, res) {
 export function errorHandler(err, req, res, next) {
   if (res.headersSent) return next(err);
   const status = err.name === "ValidationError" || err.code === 11000 ? 400 : err.status || 500;
+  const duplicateField = err.code === 11000 ? Object.keys(err.keyPattern || err.keyValue || {})[0] : "";
   const message =
     err.code === 11000
-      ? "هذه القيمة مستخدمة مسبقًا"
+      ? `هذه القيمة مستخدمة مسبقًا${duplicateField ? ` في حقل ${duplicateField}` : ""}`
       : err.name === "ValidationError"
         ? Object.values(err.errors).map((item) => item.message).join("، ")
         : err.message || "حدث خطأ في الخادم";
