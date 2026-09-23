@@ -105,11 +105,25 @@ export default function Admin() {
   const load = async () => {
     setLoading(true);
     try {
-      const [dashboard, products, categories, orders, users, banners, offers, coupons, shipping, payments, settings, activity] = await Promise.all([
+      const results = await Promise.allSettled([
         api.get("/admin/dashboard"), api.get("/products/admin/all"), api.get("/categories"), api.get("/orders"), api.get("/admin/users"), api.get("/manage/banners"), api.get("/manage/offers"), api.get("/manage/coupons"), api.get("/manage/shipping"), api.get("/manage/payment-methods"), api.get("/manage/settings"), api.get("/manage/activity")
       ]);
-      setStats(dashboard.data);
-      setData({ products: products.data, categories: categories.data, orders: orders.data, users: users.data, banners: banners.data, offers: offers.data, coupons: coupons.data, shipping: shipping.data, payments: payments.data, settings: settings.data, activity: activity.data });
+      const read = (index, fallback) => results[index].status === "fulfilled" ? results[index].value.data : fallback;
+      setStats(read(0, null));
+      setData({
+        products: read(1, []),
+        categories: read(2, []),
+        orders: read(3, []),
+        users: read(4, []),
+        banners: read(5, []),
+        offers: read(6, []),
+        coupons: read(7, []),
+        shipping: read(8, []),
+        payments: read(9, []),
+        settings: read(10, null),
+        activity: read(11, [])
+      });
+      if (results.some((result) => result.status === "rejected")) adminNotify("تم تحميل البيانات الأساسية، وبعض أقسام لوحة التحكم لم تكتمل", "error");
     } catch (error) {
       adminNotify(error.message, "error");
     } finally {
@@ -181,12 +195,12 @@ function ProductsPanel({ products, categories, form, setForm, files, setFiles, e
   useEffect(() => () => imagePreviews.forEach((image) => URL.revokeObjectURL(image.url)), [imagePreviews]);
   return <section><Title title="إدارة المنتجات" subtitle="إضافة وتعديل وحذف المنتجات والمخزون والأسعار" action={editingId && <button className="button ghost" onClick={onCancel}><X /> إلغاء التعديل</button>} /><form className="admin-form-grid product-editor" onSubmit={onSave}>
     <input required placeholder="اسم المنتج" value={form.name} onChange={set("name")} /><input placeholder="slug اختياري" value={form.slug} onChange={set("slug")} /><input placeholder="العلامة التجارية" value={form.brand} onChange={set("brand")} />
-    <select required value={form.category} onChange={set("category")}><option value="">اختر التصنيف</option>{categories.map((c) => <option value={c._id} key={c._id}>{c.name}</option>)}</select>
+    <select className="category-select" required value={form.category} onChange={set("category")}><option value="">{categories.length ? "اختر التصنيف" : "لا توجد تصنيفات - اضغط تحديث"}</option>{categories.map((c) => <option value={c._id} key={c._id}>{c.name}</option>)}</select>
     <input required type="number" min="0" placeholder="السعر" value={form.price} onChange={set("price")} /><input type="number" min="0" placeholder="السعر الأصلي" value={form.originalPrice} onChange={set("originalPrice")} /><input type="number" min="0" placeholder="سعر التخفيض" value={form.salePrice} onChange={set("salePrice")} /><input type="number" min="0" max="100" placeholder="نسبة الخصم" value={form.discountPercent} onChange={set("discountPercent")} />
     <input required type="number" min="0" placeholder="الكمية" value={form.stock} onChange={set("stock")} /><input type="number" min="0" placeholder="تنبيه انخفاض المخزون" value={form.lowStockThreshold} onChange={set("lowStockThreshold")} /><input placeholder="SKU" value={form.sku} onChange={set("sku")} /><input type="number" min="0" placeholder="الوزن" value={form.weight} onChange={set("weight")} />
     <input className="wide" placeholder="روابط صور اختيارية - اتركها فارغة إذا اخترت صور من الجهاز" value={form.images} onChange={set("images")} /><input placeholder="رابط فيديو اختياري" value={form.video} onChange={set("video")} /><input placeholder="الألوان: ذهبي، أسود..." value={form.colors} onChange={set("colors")} /><input placeholder="المقاسات: S, M, L" value={form.sizes} onChange={set("sizes")} />
     <select value={form.status} onChange={set("status")}><option value="active">نشط</option><option value="draft">مسودة</option><option value="out_of_stock">غير متوفر</option><option value="archived">مؤرشف</option></select><label className="check-row"><input type="checkbox" checked={form.featured} onChange={set("featured")} /> منتج مميز</label><label className="admin-upload-box"><input type="file" multiple accept="image/*,video/*" onChange={(e) => setFiles([...e.target.files])} /><Image /> اختر صور المنتج من الجهاز</label>
-    <textarea className="wide" required placeholder="الوصف" value={form.description} onChange={set("description")} />{files.length > 0 && <div className="wide admin-file-summary"><b>{files.length} ملفات جاهزة للرفع</b><span>ستظهر الصور هنا قبل الحفظ، ثم تظهر في واجهة المتجر بعد الحفظ.</span></div>}{imagePreviews.length > 0 && <div className="wide admin-preview-grid">{imagePreviews.map((image) => <figure key={image.url}><img src={image.url} alt={image.name} /><figcaption>{image.name}</figcaption></figure>)}</div>}<button className="button primary"><Save /> {editingId ? "تعديل المنتج" : "حفظ المنتج"}</button>
+    <textarea className="wide" required placeholder="الوصف" value={form.description} onChange={set("description")} />{!categories.length && <div className="wide admin-file-summary error"><b>التصنيفات لم تظهر</b><span>اضغط زر التحديث أعلى الصفحة، أو أضف تصنيفًا من قسم الأصناف ثم ارجع للمنتجات.</span></div>}{files.length > 0 && <div className="wide admin-file-summary"><b>{files.length} ملفات جاهزة للرفع</b><span>ستظهر الصور هنا قبل الحفظ، ثم تظهر في واجهة المتجر بعد الحفظ.</span></div>}{imagePreviews.length > 0 && <div className="wide admin-preview-grid">{imagePreviews.map((image) => <figure key={image.url}><img src={image.url} alt={image.name} /><figcaption>{image.name}</figcaption></figure>)}</div>}<button className="button primary" disabled={!categories.length}><Save /> {editingId ? "تعديل المنتج" : "حفظ المنتج"}</button>
   </form><ProductTable products={products} onEdit={onEdit} onDelete={onDelete} /></section>;
 }
 function ProductTable({ products, onEdit, onDelete }) { const useFallbackImage = (event) => { event.currentTarget.onerror = null; event.currentTarget.src = "/brand/store-interior.jpg"; }; return <div className="admin-table"><table><thead><tr><th>المنتج</th><th>التصنيف</th><th>SKU</th><th>السعر</th><th>المخزون</th><th>الحالة</th><th></th></tr></thead><tbody>{products.map((p) => <tr key={p._id}><td><div className="table-product"><img src={p.images?.[0] || "/brand/store-interior.jpg"} onError={useFallbackImage} /><b>{p.name}</b></div></td><td>{p.category?.name || "-"}</td><td>{p.sku || "-"}</td><td>{p.salePrice || p.price}</td><td><span className={`stock-badge ${p.stock <= p.lowStockThreshold ? "low" : ""}`}>{p.stock}</span></td><td>{p.status}</td><td className="row-actions"><button onClick={() => onEdit(p)}><Edit3 /> تعديل</button><button className="danger-link" onClick={() => onDelete(p._id)}><Trash2 /> حذف</button></td></tr>)}</tbody></table></div>; }

@@ -326,6 +326,19 @@
   border: 1px solid var(--line);
   padding: 10px;
   width: 100%;
+  color: var(--ink);
+  background: #fff;
+}
+
+.admin-form-grid select option {
+  color: var(--ink);
+  background: #fff;
+}
+
+.category-select {
+  cursor: pointer;
+  font-weight: 700;
+  border-color: rgba(185, 138, 59, .42) !important;
 }
 
 .admin-form-grid .wide {
@@ -408,6 +421,16 @@
 .admin-file-summary span {
   font-size: 12px;
   color: #6a604f;
+}
+
+.admin-file-summary.error {
+  border-color: #efc7c7;
+  background: #fff1f1;
+  color: #9f3434;
+}
+
+.admin-file-summary.error span {
+  color: #9f3434;
 }
 
 .admin-preview-grid {
