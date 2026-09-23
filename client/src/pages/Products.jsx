@@ -26,6 +26,17 @@ export default function Products() {
     return result;
   }, [products, category, search, sort, onlyFavorites, favorites]);
 
+  const groupedSections = useMemo(() => {
+    return categories
+      .map((item) => ({
+        category: item,
+        products: filtered.filter((product) => (product.category?._id || product.category) === item._id)
+      }))
+      .filter((section) => section.products.length);
+  }, [categories, filtered]);
+
+  const shouldGroup = !category && !search && !onlyFavorites;
+
   const change = (key, value) => {
     const next = new URLSearchParams(params);
     value ? next.set(key, value) : next.delete(key);
@@ -34,7 +45,7 @@ export default function Products() {
 
   return (
     <div className="page container">
-      <div className="page-heading"><span className="eyebrow">متجر الشامل</span><h1>{onlyFavorites ? "المفضلة" : "كل المنتجات"}</h1><p>منتجات متنوعة لليمن ودول الخليج</p></div>
+      <div className="page-heading"><span className="eyebrow">متجر الشامل</span><h1>{onlyFavorites ? "المفضلة" : "كتالوج المنتجات"}</h1><p>صور المنتجات ووصفها وأسعارها، مقسمة حسب الأقسام ومتصلة بلوحة التحكم.</p></div>
       <div className="shop-toolbar">
         <button className="filter-toggle" onClick={() => setFilterOpen(true)}><SlidersHorizontal /> تصفية المنتجات</button>
         <span>{filtered.length} منتج</span>
@@ -48,10 +59,13 @@ export default function Products() {
           {categories.map((item) => <label key={item._id}><input type="radio" checked={category === item._id} onChange={() => change("category", item._id)} /> {item.name}<small>{item.productCount}</small></label>)}
           <h3>التوفر</h3>
           <label><input type="checkbox" /> المتوفر فقط</label>
-          <div className="filter-note">شحن مجاني للطلبات فوق <b>150 ر.س</b></div>
+          <div className="filter-note">أي منتج تضيفه من لوحة التحكم يظهر هنا مباشرة داخل قسمه.</div>
         </aside>
         <div className="products-area">
-          {loading ? <div className="loading">نجهز لكِ أجمل القطع...</div> : filtered.length ? <div className="product-grid">{filtered.map((product) => <ProductCard key={product._id} product={product} />)}</div> : <div className="empty-state"><h2>لا توجد منتجات هنا بعد</h2><p>جرّبي تصنيفًا آخر أو أزيلي عوامل التصفية.</p></div>}
+          {loading ? <div className="loading">نجهز لكِ أجمل القطع...</div> : filtered.length ? (
+            shouldGroup ? <div className="catalog-section-list">{groupedSections.map((section) => <section className="catalog-category-section" key={section.category._id}><div className="catalog-category-head"><div><span className="eyebrow">قسم مستقل</span><h2>{section.category.name}</h2><p>{section.products.length} منتجات مع الصور والوصف والأسعار.</p></div><button className="text-link" onClick={() => change("category", section.category._id)}>عرض القسم</button></div><div className="product-grid">{section.products.map((product) => <ProductCard key={product._id} product={product} />)}</div></section>)}</div>
+              : <div className="product-grid">{filtered.map((product) => <ProductCard key={product._id} product={product} />)}</div>
+          ) : <div className="empty-state"><h2>لا توجد منتجات هنا بعد</h2><p>جرّبي تصنيفًا آخر أو أزيلي عوامل التصفية.</p></div>}
         </div>
       </div>
       {filterOpen && <div className="overlay" onClick={() => setFilterOpen(false)} />}

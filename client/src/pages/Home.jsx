@@ -15,10 +15,13 @@ const reviews = [
 export default function Home() {
   const { products, categories } = useCatalog();
   const { t, language } = useStore();
-  const deals = products.filter((x) => x.salePrice || x.discountPercent || x.compareAtPrice).slice(0, 4);
-  const bestSellers = [...products].sort((a, b) => (b.sold || b.rating || 0) - (a.sold || a.rating || 0)).slice(0, 4);
-  const newest = products.slice(0, 4);
-  const suggested = products.filter((x) => x.featured).slice(0, 4);
+  const catalogSections = categories
+    .map((category) => ({
+      category,
+      products: products.filter((product) => (product.category?._id || product.category) === category._id).slice(0, 8)
+    }))
+    .filter((section) => section.products.length);
+  const uncategorizedProducts = products.filter((product) => !product.category).slice(0, 8);
 
   return (
     <>
@@ -27,10 +30,10 @@ export default function Home() {
         <div className="container hero-content">
           <div className="hero-copy">
             <span className="eyebrow light">{brandContacts.handle}</span>
-            <h1>{t("heroTitleA")}<br /><em>{t("heroTitleB")}</em></h1>
-            <p>{t("heroText")}</p>
+            <h1>{language === "ar" ? "كتالوج متجر الشامل" : "Alshamel Store Catalog"}<br /><em>{language === "ar" ? "صور، وصف، وأسعار واضحة" : "Photos, Details, And Prices"}</em></h1>
+            <p>{language === "ar" ? "استعرض منتجات متجر الشامل حسب كل قسم بشكل منفصل، مع صور المنتجات ووصفها وأسعارها كما تدار مباشرة من لوحة التحكم." : "Browse Alshamel Store products by category with real photos, descriptions, and prices managed directly from the dashboard."}</p>
             <div className="hero-actions">
-              <Link to="/products" className="button gold">{t("discover")} <ArrowLeft /></Link>
+              <Link to="/products" className="button gold">{language === "ar" ? "عرض كل الأقسام" : "View All Sections"} <ArrowLeft /></Link>
               <Link to="/contact" className="text-link light">{t("contact")}</Link>
             </div>
           </div>
@@ -56,7 +59,7 @@ export default function Home() {
       </div></section>
 
       <section className="section container">
-        <SectionTitle eyebrow={t("mainCategories")} title={language === "ar" ? "الأصناف كما في هوية المتجر" : "Categories From The Brand"} description={language === "ar" ? "أظافر اصطناعية، مستحضرات تجميل، عطور، حقائب، نظارات، إكسسوارات، منتجات عناية، هدايا." : "Nails, makeup, perfumes, bags, eyewear, accessories, care, and gifts."} />
+        <SectionTitle eyebrow={t("mainCategories")} title={language === "ar" ? "أقسام المتجر" : "Store Sections"} description={language === "ar" ? "كل قسم مستقل، والمنتجات داخله تأتي مباشرة من قاعدة البيانات ولوحة التحكم." : "Each section is separate, and its products are loaded directly from the database and dashboard."} />
         <div className="beauty-category-grid">
           {categories.map((category) => (
             <Link to={`/products?category=${category._id}`} className="beauty-category-card" key={category._id}>
@@ -67,10 +70,21 @@ export default function Home() {
         </div>
       </section>
 
-      <ProductSection eyebrow={t("newProducts")} title={language === "ar" ? "وصل حديثًا للمتجر" : "Fresh In Store"} products={newest} />
-      <ProductSection eyebrow={t("bestSellers")} title={language === "ar" ? "الأكثر طلبًا" : "Best Sellers"} products={bestSellers} soft />
-      <ProductSection eyebrow={t("deals")} title={language === "ar" ? "عروض وخصومات" : "Offers & Discounts"} products={deals.length ? deals : products.slice(0, 4)} />
-      <ProductSection eyebrow={t("suggested")} title={language === "ar" ? "اختيارات متجر الشامل" : "Alshamel Picks"} products={suggested.length ? suggested : products.slice(0, 4)} soft />
+      {catalogSections.length ? catalogSections.map((section, index) => (
+        <ProductSection
+          key={section.category._id}
+          eyebrow={language === "ar" ? "قسم مستقل" : "Catalog Section"}
+          title={section.category.translations?.[language]?.name || section.category.name}
+          description={language === "ar" ? `${section.products.length} منتجات مع الصور والوصف والأسعار.` : `${section.products.length} products with photos, descriptions, and prices.`}
+          products={section.products}
+          categoryId={section.category._id}
+          soft={index % 2 === 1}
+        />
+      )) : <section className="section container"><div className="empty-state"><h2>{language === "ar" ? "لا توجد منتجات بعد" : "No Products Yet"}</h2><p>{language === "ar" ? "أضف المنتجات من لوحة التحكم وستظهر هنا مباشرة داخل أقسامها." : "Add products from the dashboard and they will appear here inside their sections."}</p></div></section>}
+
+      {uncategorizedProducts.length > 0 && (
+        <ProductSection eyebrow={language === "ar" ? "بدون تصنيف" : "Uncategorized"} title={language === "ar" ? "منتجات تحتاج تصنيف" : "Products To Categorize"} products={uncategorizedProducts} soft />
+      )}
 
       <section className="story-banner container beauty-contact-banner">
         <div className="story-image qr-panel">
@@ -97,11 +111,11 @@ export default function Home() {
   );
 }
 
-function ProductSection({ eyebrow, title, products, soft = false }) {
+function ProductSection({ eyebrow, title, description, products, categoryId, soft = false }) {
   return (
     <section className={`section ${soft ? "featured-section" : ""}`}>
       <div className="container">
-        <SectionTitle eyebrow={eyebrow} title={title} action={<Link className="text-link" to="/products">عرض الكل <ArrowLeft /></Link>} />
+        <SectionTitle eyebrow={eyebrow} title={title} description={description} action={<Link className="text-link" to={categoryId ? `/products?category=${categoryId}` : "/products"}>عرض القسم <ArrowLeft /></Link>} />
         <div className="product-grid">{products.map((product) => <ProductCard key={product._id} product={product} />)}</div>
       </div>
     </section>

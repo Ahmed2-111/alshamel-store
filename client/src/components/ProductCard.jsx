@@ -8,6 +8,8 @@ export default function ProductCard({ product }) {
   const finalPrice = product.salePrice || product.price;
   const original = product.originalPrice || product.compareAtPrice;
   const sale = product.discountPercent || (original ? Math.round((1 - finalPrice / original) * 100) : 0);
+  const description = product.translations?.[language]?.shortDescription || product.shortDescription || product.description || "";
+  const shortDescription = description.length > 105 ? `${description.slice(0, 105)}...` : description;
   const image = product.images?.find(Boolean) || "/brand/store-interior.jpg";
   const useFallbackImage = (event) => {
     event.currentTarget.onerror = null;
@@ -28,6 +30,7 @@ export default function ProductCard({ product }) {
       <div className="product-info">
         <div className="product-meta"><span>{product.brand || product.category?.name}</span><span className="rating"><Star fill="currentColor" /> {product.rating || (language === "ar" ? "جديد" : "New")}</span></div>
         <Link to={`/products/${product.slug || product._id}`}><h3>{displayName}</h3></Link>
+        {shortDescription && <p className="product-description">{shortDescription}</p>}
         <div className="price"><strong>{finalPrice} {currency}</strong>{original && <del>{original} {currency}</del>}</div>
       </div>
     </article>
