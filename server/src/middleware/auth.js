@@ -14,7 +14,7 @@ export async function protect(req, res, next) {
     if (!req.user) return res.status(401).json({ message: "المستخدم غير موجود" });
     next();
   } catch {
-    res.status(401).json({ message: "جلسة غير صالحة أو منتهية" });
+    res.status(401).json({ message: "جلسة غير صالحة أو منتهية", code: "SESSION_EXPIRED" });
   }
 }
 

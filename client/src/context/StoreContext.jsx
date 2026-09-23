@@ -16,6 +16,14 @@ export function StoreProvider({ children }) {
   useEffect(() => localStorage.setItem("ys_cart", JSON.stringify(cart)), [cart]);
   useEffect(() => localStorage.setItem("ys_favorites", JSON.stringify(favorites)), [favorites]);
   useEffect(() => {
+    const expireSession = (event) => {
+      setUser(null);
+      notify(event.detail?.message || "انتهت الجلسة، يرجى تسجيل الدخول من جديد", "error");
+    };
+    window.addEventListener("alshamel:session-expired", expireSession);
+    return () => window.removeEventListener("alshamel:session-expired", expireSession);
+  }, []);
+  useEffect(() => {
     localStorage.setItem("alshamel_language", language);
     document.documentElement.lang = language;
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";

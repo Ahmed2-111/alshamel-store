@@ -19,7 +19,9 @@ export default function Auth({ mode = "login" }) {
     try {
       const data = isLogin ? await login(form) : await register(form);
       notify(isLogin ? "أهلًا بعودتك" : "أهلًا بك في متجر الشامل");
-      navigate(data?.role === "admin" ? "/admin" : new URLSearchParams(location.search).get("redirect") || "/");
+      const redirect = new URLSearchParams(location.search).get("redirect");
+      const isAdmin = ["admin", "super_admin"].includes(data?.role);
+      navigate(redirect || (isAdmin ? "/admin" : "/"));
     } catch (error) { notify(error.message, "error"); } finally { setLoading(false); }
   };
   return <div className="auth-page"><div className="auth-image"><img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1200&q=90" alt="" /><div><span>متجر الشامل</span><blockquote>“كل ما تحتاجه في مكان واحد، بتجربة دفع وشحن مناسبة لليمن والخليج.”</blockquote></div></div><div className="auth-panel"><Link to="/"><Logo /></Link><div className="auth-box"><span className="eyebrow">{isLogin ? "سعداء بعودتك" : "انضم إلى متجر الشامل"}</span><h1>{isLogin ? "تسجيل الدخول" : "إنشاء حساب جديد"}</h1><p>{isLogin ? "أدخل بياناتك للمتابعة إلى حسابك" : "أنشئ حسابك واستمتع بتجربة تسوق احترافية"}</p><form onSubmit={submit}>
